@@ -1,16 +1,16 @@
 from pages.base_page import BasePage
 from locators.recover_password_page_locators import RecoverPasswordPageLocators
 import allure
-import database
+
 
 class RecoverPasswordPage(BasePage):
 
     @allure.step("Заполняем поле 'email' для восстановления пароля")
-    def filling_email_field(self):
+    def filling_email_field(self, email):
         self.wait_for_element(RecoverPasswordPageLocators.field_email, timeout=10)
         email_field = self.find_element(RecoverPasswordPageLocators.field_email)
         email_field.click()
-        email_field.send_keys(database.email)
+        email_field.send_keys(email)
 
     @allure.step("Кликаем на кнопку 'Восстановить'")
     def click_restore_button(self):

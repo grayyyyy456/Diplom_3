@@ -1,10 +1,10 @@
-import time
 import pytest
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from pages.recover_password_page import RecoverPasswordPage
 import allure
 from curl import url_recover_password
+from database import Data
 
 
 
@@ -14,9 +14,7 @@ class TestRecoverPassword:
         home_page = HomePage(browser)
         login_page = LoginPage(browser)
         recover_page = RecoverPasswordPage(browser)
-
         home_page.wait_button_login()
-        time.sleep(1)
         home_page.click_button_login()
         recover_page.click_recover_password_button()
 
@@ -27,10 +25,10 @@ class TestRecoverPassword:
         home_page = HomePage(browser)
         recover_page = RecoverPasswordPage(browser)
         home_page.wait_button_login()
-        time.sleep(1)
+
         home_page.click_button_login()
         recover_page.click_recover_password_button()
-        recover_page.filling_email_field()
+        recover_page.filling_email_field(Data.email)
         recover_page.click_restore_button()
 
         assert recover_page.wait_save_button().is_displayed()
@@ -41,7 +39,6 @@ class TestRecoverPassword:
         recover_page = RecoverPasswordPage(browser)
 
         home_page.wait_button_login()
-        time.sleep(1)
         home_page.click_button_login()
         recover_page.find_password()
         recover_page.click_glass_password()

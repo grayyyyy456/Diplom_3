@@ -1,14 +1,13 @@
+import time
 from pages.base_page import BasePage
 from locators.order_window_locators import OrderWindowLocators
 import allure
-from time import sleep
 
 
 class OrderWindowPage(BasePage):
     @allure.step("Ждем загрузку последнего заказа в ленте заказов")
     def wait_last_order(self):
         self.wait_for_element(OrderWindowLocators.first_order)
-        sleep(1)
 
     @allure.step("Нажимаем на последний заказ в ленте заказов")
     def click_last_order(self):
@@ -44,15 +43,32 @@ class OrderWindowPage(BasePage):
 
     @allure.step("Ждем загрузку номера заказа В работе")
     def wait_counter_value_work(self):
+        time.sleep(2)
         return self.wait_for_element(OrderWindowLocators.number_new_order_work)
 
     @allure.step("Получаем текущее значение заказа В работе")
     def get_order_number_work(self):
-        return int(self.get_text_from_element(OrderWindowLocators.number_new_order_work))
+        try:
+            self.find_element(OrderWindowLocators.number_new_order_work)
+            order_number_text = self.get_text_from_element(OrderWindowLocators.number_new_order_work)
+            while not order_number_text.isdigit():
+                time.sleep(0.5)
+                order_number_text = self.get_text_from_element(OrderWindowLocators.number_new_order_work)
+            return int(order_number_text)
+        except Exception as e:
+            raise RuntimeError(f"Ошибка при получении номера заказа: {str(e)}")
+
 
     @allure.step("Получаем номер заказа из истории заказов")
     def get_order_number_history(self):
-        order_number_element = self.find_element(OrderWindowLocators.number_order_last)
-        order_number_text = order_number_element.text
-        order_number = order_number_text.lstrip('#')
-        return int(order_number)
+        try:
+            order_number_element = self.find_element(OrderWindowLocators.number_order_last)
+            order_number_text = order_number_element.text
+            order_number = order_number_text.lstrip('#')
+            return int(order_number)
+        except ValueError:
+            raise ValueError(f"Невозможно преобразовать в число: stroky")
+
+    @allure.step("Ждем номер заказа из истории заказов")
+    def wait_order_number_history(self):
+        self.wait_for_element(OrderWindowLocators.number_order_last)

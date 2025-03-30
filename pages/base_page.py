@@ -4,14 +4,13 @@ import allure
 from locators.order_locators import OrderLocators
 
 
-
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
 
     @allure.step("Ожидание загрузки элемента")
-    def wait_for_element(self, locator, timeout=10):
+    def wait_for_element(self, locator, timeout=20):
         return WebDriverWait(self.driver, timeout).until(expected_conditions.visibility_of_element_located(locator))
 
     @allure.step("Кликаем на элемент")
@@ -67,3 +66,7 @@ class BasePage:
         """
 
         self.driver.execute_script(js_script, ingredient_element, target_element)
+
+    @allure.step("Ожидание исчезновения элемента")
+    def wait_for_element_to_disappear(self, locator, timeout=20):
+        return WebDriverWait(self.driver, timeout).until(expected_conditions.invisibility_of_element_located(locator))

@@ -3,7 +3,6 @@ from locators.login_page_locators import LoginPageLocators
 import allure
 
 
-
 class LoginPage(BasePage):
 
     @allure.step("Заполняем поле 'email' для входа")
